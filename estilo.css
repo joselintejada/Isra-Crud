@@ -1,0 +1,80 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+/*Definimos el tamaño, color y margen del contenedor que contendra nuestras demas secciones*/
+#contenedor{
+	width: 1200px;
+	height: 1000px;
+	background: #ffd54f;
+	margin: 0.5em auto;
+	padding: 0.5em;  
+}
+/*Definimos el tamaño, color y margen del contenedor que contendra nuestr formulario*/
+#header{
+	height: 15%;
+	background: #424242;
+	border-radius: 1em;
+	margin: 1em;
+	padding: 3%;
+	color: #FFFFFF;
+}
+/*Definimos el tamaño, color y margen del contenedor que contendra nuestras secciones correspondientes a las tablas*/
+#contenido{
+	height: 80%;
+	background: #ffd54f;
+	color: #424242;
+}
+#form{
+	padding: 1%;
+	height: 20%;
+	width: 97%;
+	background: #424242;
+	margin: 0.5em auto;
+	color: #FFFFFF;
+}
+#datos1{
+	padding: 10px;
+   	margin: 10px;
+	display: inline-block;
+}
+#datos2{
+	padding: 10px;
+   	margin: 10px;
+	display: inline-block;
+}
+#datos3{
+	padding: 10px;
+   	margin: 10px;
+	display: inline-block;
+}
+#datos4{
+	padding: 10px;
+   	margin: 10px;
+	display: inline-block;
+}
+#datos5{
+	padding: 10px;
+   	margin: 10px;
+	display: inline-block;
+}
+/*Definimos el tamaño, color y margen del contenedor que contendra la tabla de hombres*/
+#cont1{
+	padding: 1%;
+	height: 72%;
+	width: 47%;
+	background: #424242;
+	border-radius: 1em;
+	float: left;
+	margin: 1em;
+}
+/*Definimos el tamaño, color y margen del contenedor que contendra la tabla de mujeres*/
+#cont2{
+	padding: 1%;
+	height: 72%;
+	width: 47%;
+	background: #424242;
+	border-radius: 1em;
+	float: right;
+	margin: 1em;
+}

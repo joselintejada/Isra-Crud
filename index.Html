@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tablas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+	<!-- jQuery and JS bundle w/ Popper.js -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="estilo.css">
+    
+</head>
+<script src="https://www.gstatic.com/firebasejs/7.2.0/firebase.js"></script>
+ <body style="background-color:#424242;"><!Agregamos el cuerpo de la pagina y añadimos un color de fondo>
+ 	<div id="contenedor"><!Agregamos varias divisiones que nos serviran como secciones para dividir la pagina>
+	 	<div id="header"><!Estas divisiones son integradas con un id referente para ser modificado en medida y color con ayuda de Css>	 
+	 	<h1 align="center">Gestion de alumnos</h1>
+	 	</div>
+	 	<div id="contenido"><!Colocamos el contenedor que contendra las tablas>
+	 		<fieldset></fieldset>
+	 		<Legend><h4>Introduce los datos del estudiante</h4></Legend>
+		 		<div id="form">
+		 			<div id="datos1" style=" ">
+			 		<label >Matricula:</label>
+			 		<input type="text" placeholder="16520" id="matricula">
+			 		<br>
+			 		<label >Nombre:</label>
+		            <input type="text" placeholder="Juan" id="nombre">
+		            <input class="btn btn-success" id="boton" type="button" value="Buscar" onclick="buscar()">
+			 		</div>
+			 		<div id="datos2" style=" ">
+		            <label >Edad:</label>
+		            <input type="text" placeholder="99" id="edad"><br>
+		            <label >Promedio:</label>
+		            <input type="text" placeholder="100" id="promedio">
+		            </div>
+		            <div id="datos3" style=" ">
+		            <label >Sexo:</label>
+		            <input type="text" placeholder="H/M" id="sexo"></br>
+		            <input class="btn btn-info" id="botonRegistrar" type="button" value="Registrar" onclick="decidirinsertar()">
+		            </div>
+		            <div id="datos4" style="display: none;">
+		            <input class="btn btn-danger" id="botonModificar" type="button" value="Modificar" onclick="decidiractualizar()">
+		            </div>
+		            <input class="btn btn-warning" id="boton1" type="button" value="Mostrar todo" onclick="mostrart()">
+		            <br>
+		            	<label id="total">El total de alumnos es: </label>
+		            	<label id="prom">El promedio total es: </label>  
+		            	 
+		 		</div>
+	 		<div id="cont1"><!Colocamos una division para la tabla de hombres>
+			 	<table  id = 'tab1' name="tabla1" class="table table-striped table-dark" style="text-align:center;" border="1"><!Creamos una tabla>
+						<tr class=bg-info>
+							<td colspan=7 align=center>Tabla de Hombres</td><!Colocamos una fila con tamaño de 6 celdas>
+						</tr>
+						<tr class=bg-info>
+							<td>Matricula</td><!Colocamos en dos celdas verticales el dato np>
+							<td>Nombre</td><!Colocamos dos celdas verticales el dato nombre>
+							<td>Edad</td><!Colocamos en 4 celdas la etiqueta estado de animo>
+							<td>Sexo</td>
+							<td>Promedio</td>
+							<td colspan="2">Accion</td>
+						</tr>
+						<tbody id="hombres"></tbody>
+				</table>
+			</div>
+			<div id="cont2"><!colocamos un contenedor para la tabla mujeres>
+			 		<table id='tab2' name="tabla2" class="table table-hover table-dark" style="text-align:center;" border="1">
+						<tr class=bg-danger>
+							<td colspan=7 align=center>Tabla de Mujeres</td><!Colocamos una fila con tamaño de 6 celdas>
+						</tr>
+						<tr class=bg-danger>
+							<td>Matricula</td><!Colocamos en dos celdas verticales el dato np>
+							<td>Nombre</td><!Colocamos dos celdas verticales el dato nombre>
+							<td>Edad</td><!Colocamos en 4 celdas la etiqueta estado de animo>
+							<td>Sexo</td>
+							<td>Promedio</td>
+							<td colspan="2">Accion</td>
+						</tr>
+						<tbody id="mujeres"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+ </body>
+ <script>
+  cont = 0;
+  pro = 0;
+  var firebaseConfig = {
+    apiKey: "AIzaSyBoO7Ig7vUG2tFRFHiuvTiaZ_xCHsxSqQg",
+    authDomain: "crud-19a8d.firebaseapp.com",
+    databaseURL: "https://crud-19a8d.firebaseio.com",
+    projectId: "crud-19a8d",
+    storageBucket: "crud-19a8d.appspot.com",
+    messagingSenderId: "332176213421",
+    appId: "1:332176213421:web:aca7c342c5b51871620d24",
+    measurementId: "G-0VPN6MH94E"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+  cargarTabla();
+  cargarTabla1();
+
+  var buscar=()=>{
+  	var bbb=document.getElementById("nombre");
+	var bHombres = firebase.database().ref("hombres/");
+	bHombres.orderByChild("nombre").equalTo(bbb.value).limitToLast(10);
+	var bMujeres = firebase.database().ref("mujeres/");
+	bMujeres.orderByChild("nombre").equalTo(bbb.value).limitToLast(10);
+	$("#hombres").empty();
+	$("#mujeres").empty();
+	bHombres.on("child_added", function (data) {
+	        var taskValue = data.val();
+	        if (String(taskValue.nombre)==String(bbb.value)) {
+	        var registro = tabla(taskValue.matricula, taskValue.nombre, taskValue.edad, taskValue.sexo, taskValue.promedio);
+	        innertHTML("hombres", registro);
+	        }
+
+	     }    );
+	bMujeres.on("child_added", function (data) {
+	        var taskValue = data.val();
+	        if (String(taskValue.nombre)==String(bbb.value)) {
+	        var registro = tabla1(taskValue.matricula, taskValue.nombre, taskValue.edad, taskValue.sexo, taskValue.promedio);
+	        innertHTML("mujeres", registro);
+	        }
+
+	     }    );
+	}
+
+  function mostrart(){
+  	location.reload();
+  }
+
+  function cargarTabla() {
+    var task = firebase.database().ref("hombres/");
+    task.on("child_added", function (data) {
+        var taskValue = data.val();
+        var registro = tabla(taskValue.matricula, taskValue.nombre, taskValue.edad, taskValue.sexo, taskValue.promedio);
+        innertHTML("hombres", registro);
+        cont++;
+        pro = pro + parseFloat(taskValue.promedio);
+        res = pro/cont;
+        document.getElementById("total").innerHTML = "El total de alumnos es: "+cont;
+        document.getElementById("prom").innerHTML = "El promedio total es: "+res;
+    });
+  }
+
+  function cargarTabla1() {
+    var task = firebase.database().ref("mujeres/");
+    task.on("child_added", function (data) {
+        var taskValue = data.val();
+        var registro = tabla1(taskValue.matricula, taskValue.nombre, taskValue.edad, taskValue.sexo, taskValue.promedio);
+        innertHTML("mujeres", registro);
+        cont++;
+        pro = pro + parseFloat(taskValue.promedio);
+        res = pro/cont;
+        document.getElementById("total").innerHTML = "El total de alumnos es: "+cont;
+        document.getElementById("prom").innerHTML = "El promedio total es: "+res;
+    });
+  }
+
+  function innertHTML(id, registro) {
+    return document.getElementById(id).innerHTML += registro;
+  }
+
+function tabla(matricula, nombre, edad, sexo, promedio) {
+    return '<tr class="bg-info">' +
+        '<td>' + matricula + '</td>' +
+        '<td>' + nombre + '</td>' +
+        '<td>' + edad + '</td>' +
+        '<td>' + sexo + '</td>' +
+        '<td>' + promedio + '</td>' +
+        '<td><img src=iconos/deletex24.png onclick="eliminarRegistro(' + matricula + ')">' + '</i></td>' +
+        '<td><img src=iconos/editx24.png onclick="editarRegistro(' + matricula + ')">' + '</i></td>' +
+        '</tr>';
+}
+
+function tabla1(matricula, nombre, edad, sexo, promedio) {
+    return '<tr class="bg-danger">' +
+        '<td>' + matricula + '</td>' +
+        '<td>' + nombre + '</td>' +
+        '<td>' + edad + '</td>' +
+        '<td>' + sexo + '</td>' +
+        '<td>' + promedio + '</td>' +
+        '<td><img src=iconos/deletex24.png onclick="eliminarRegistro1(' + matricula + ')">' + '</i></td>' +
+        '<td><img src=iconos/editx24.png onclick="editarRegistro1(' + matricula + ')">' + '</i></td>' +
+        '</tr>';
+        
+}
+
+    function eliminarRegistro(indice){
+    var task=firebase.database().ref("hombres/"+indice).remove();
+    location.reload();
+	}
+
+	function eliminarRegistro1(indice){
+    var task=firebase.database().ref("mujeres/"+indice).remove();
+    location.reload();
+	}
+
+    function editarRegistro(matricula, sexo) {
+    limpiar("matricula", matricula);
+    limpiar("sexo", "H");
+    document.getElementById('datos3').style.display='none';
+    document.getElementById('datos4').style.display='';
+	}
+
+	function editarRegistro1(matricula, sexo) {
+    limpiar("matricula", matricula);
+    limpiar("sexo", "M");
+    document.getElementById('datos3').style.display='none';
+    document.getElementById('datos4').style.display='';
+	}
+
+function actualizarRegistro(){
+    var matricula = getID("matricula");
+    var nombre = getID("nombre");
+    var edad = getID("edad");
+    var sexo = getID("sexo");
+    var promedio = getID("promedio");
+    if (matricula.length == 0 ) {
+        alert("El campo matricula esta vacio");
+    }else if(nombre.length == 0){
+        alert("El campo nombre esta vacio");
+    }else if(edad.length == 0){
+        alert("El campo edad esta vacio");
+    }else if(sexo.length == 0){
+        alert("El campo sexo esta vacio");
+    }else if(promedio.length == 0){
+        alert("El campo promedio esta vacio");
+    }else  {
+        var task=firebase.database().ref("hombres/"+matricula).remove();
+        var task = firebase.database().ref("hombres/" + matricula);
+        var arregloDatos = arrayJASON(matricula, nombre, edad, sexo, promedio);
+        task.set(arregloDatos);
+        limpiar("matricula", "");
+        limpiar("nombre", "");
+        limpiar("edad", "");
+        limpiar("sexo", "");
+        limpiar("promedio", "");
+        alert("Guardado correctamente")
+        location.reload();
+	}
+}
+
+function actualizarRegistro1(){
+    var matricula = getID("matricula");
+    var nombre = getID("nombre");
+    var edad = getID("edad");
+    var sexo = getID("sexo");
+    var promedio = getID("promedio");
+    if (matricula.length == 0 ) {
+        alert("El campo matricula esta vacio");
+    }else if(nombre.length == 0){
+        alert("El campo nombre esta vacio");
+    }else if(edad.length == 0){
+        alert("El campo edad esta vacio");
+    }else if(sexo.length == 0){
+        alert("El campo sexo esta vacio");
+    }else if(promedio.length == 0){
+        alert("El campo promedio esta vacio");
+    }else  {
+        var task=firebase.database().ref("mujeres/"+matricula).remove();
+        var task = firebase.database().ref("mujeres/" + matricula);
+        var arregloDatos = arrayJASON1(matricula, nombre, edad, sexo, promedio);
+        task.set(arregloDatos);
+        limpiar("matricula", "");
+        limpiar("nombre", "");
+        limpiar("edad", "");
+        limpiar("sexo", "");
+        limpiar("promedio", "");
+        alert("Guardado correctamente")
+        location.reload();
+	}
+}
+function getID(Id) {
+    return document.getElementById(Id).value;
+}
+
+function arrayJASON(matricula,nombre,edad,sexo,promedio){
+    var data = {
+        matricula:matricula,
+        nombre:nombre,
+        edad:edad,
+        sexo:sexo,
+        promedio:promedio
+    };
+    return data;
+}
+function arrayJASON1(matricula,nombre,edad,sexo,promedio){
+    var data = {
+        matricula:matricula,
+        nombre:nombre,
+        edad:edad,
+        sexo:sexo,
+        promedio:promedio
+    };
+    return data;
+}
+
+function limpiar(id, resul){
+    return document.getElementById(id).value=resul;
+}
+
+function insertTask(){
+    var matricula = getID("matricula");
+    var nombre = getID("nombre");
+    var edad = getID("edad");
+    var sexo = getID("sexo");
+    var promedio = getID("promedio");
+        var task = firebase.database().ref("hombres/"+matricula);
+        var arraydata = arrayJASON(matricula, nombre, edad, sexo, promedio);
+        task.set(arraydata);
+        limpiar("matricula", "");
+        limpiar("nombre", "");
+        limpiar("edad", "");
+        limpiar("sexo", "");
+        limpiar("promedio", "");
+        alert("Guardado correctamente")
+    
+}
+
+function insertTask1(){
+    var matricula = getID("matricula");
+    var nombre = getID("nombre");
+    var edad = getID("edad");
+    var sexo = getID("sexo");
+    var promedio = getID("promedio");
+        var task = firebase.database().ref("mujeres/"+matricula);
+        var arraydata = arrayJASON1(matricula, nombre, edad, sexo, promedio);
+        task.set(arraydata);
+        limpiar("matricula", "");
+        limpiar("nombre", "");
+        limpiar("edad", "");
+        limpiar("sexo", "");
+        limpiar("promedio", "");
+        alert("Guardado correctamente")
+    
+}
+
+function decidirinsertar(){
+	var matricula = getID("matricula");
+    var nombre = getID("nombre");
+    var edad = getID("edad");
+    var sexo = getID("sexo");
+    var promedio = getID("promedio");
+    if (matricula.length == 0 ) {
+        alert("El campo matricula esta vacio");
+    }else if(nombre.length == 0){
+        alert("El campo nombre esta vacio");
+    }else if(edad.length == 0){
+        alert("El campo edad esta vacio");
+    }else if(sexo.length == 0){
+        alert("El campo sexo esta vacio");
+    }else if(promedio.length == 0){
+        alert("El campo promedio esta vacio");
+    }
+	if (sexo == 'H' ) {
+        insertTask();
+    }else if(sexo == 'M'){
+        insertTask1();
+    }
+}
+function decidiractualizar(){
+	var sexo = getID("sexo");
+	if (sexo == 'H' ) {
+        actualizarRegistro();
+    }else if(sexo == 'M'){
+        actualizarRegistro1();
+    }
+}  
+</script>
+</html>
